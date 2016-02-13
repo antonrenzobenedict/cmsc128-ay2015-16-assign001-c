@@ -11,11 +11,33 @@ main(){
 		{
 			switch(choice)
 			{
-			case 1:numToWords();
+			case 1:;
+					int num;
+					printf("Enter Number: ");
+					scanf("%d",&num);
+					printf("%s\n",numToWords(num));
+					
 					break;
-			case 2:wordsToNum();
+			case 2:;
+					char word[256];
+					printf("Enter Word: ");
+					getchar();
+					fgets(word,256,stdin);
+					trim(word);
+					printf("%d\n",wordsToNum(word));
 					break;
-			case 3:wordsToCurrency();
+			case 3:	
+					;
+					char word2[256];
+					char currency[256];
+					printf("Enter Word: ");
+					getchar();
+					fgets(word2,256,stdin);
+					trim(word2);
+					printf("Enter Currency: ");
+					fgets(currency,256,stdin);
+					trim(currency);
+					printf("%s\n",wordsToCurrency(word2,currency));
 					break;
 			case 4:;
 					char number[256];

@@ -10,6 +10,8 @@ char * getOnes(int num);
 char * getTens(int tens);
 char * getHundreds(int hundreds);
 char * specialOne(int num);
+char * numToWords(int num);
+int wordsToNum(char* word);
 int scanNum(char* word);
 int toNum(char* word);
 int toPlace(char* word);
@@ -30,17 +32,15 @@ int menu(){
 	return choice;
 }
 
-void numToWords()
+char* numToWords(int num)
 {
-	int num;
 	int accumulator = 0;
 	int ones, tens, hundreds, thousands, ten_thousands, hundred_thousands;
-	char word [256] ;
+	char *word = malloc(sizeof(char) * 256);
 	
 	
 	strcpy(word,"");
-	printf("Enter Number: ");
-	scanf("%d",&num);
+	
 	
 	if(num == 1000000)
 	{
@@ -72,7 +72,7 @@ void numToWords()
 		if(ten_thousands != 1)
 				strcat(word,getOnes(thousands));
 				
-		if(thousands > 0)
+		if(thousands > 0 || ten_thousands > 0 || hundred_thousands > 0)
 			strcat(word,"thousand ");
 		
 		
@@ -90,7 +90,7 @@ void numToWords()
 	}	
 		
 	
-	printf("%s",word);
+	return word;
 }
 
 char * getOnes(int num){
@@ -135,7 +135,7 @@ char * getTens(int tens)
 				strcat(n,"thirty ");
 			break;
 		case 4:
-				strcat(n,"fourty ");
+				strcat(n,"forty ");
 			break;
 		case 5:
 				strcat(n,"fifty ");
@@ -217,191 +217,48 @@ char * specialOne(int num)
 	return n;
 }
 
-void wordsToNum()
+int wordsToNum(char* word)
 {
-	char word[256];
-	int number = 0;
-	
-	getchar();
-	fgets(word,256,stdin);
-	trim(word);
-	
-	
-	if(strcmp(word,"one million\n") == 0)
+	int returnThis = 0 ;
+	int number;
+	strcat(word," ");
+	if(strcmp(word,"one million") == 0)
 	{
-		number += 1000000;
+		number = 0;
+	}
+	else if(strcmp(word,"zero") == 0)
+	{
+		number = 0;
 	}
 	else
 	{
-		char **array = (char**) malloc((32)*sizeof(char*));
-		char *token;
-		char s[2] = " ";
-		int i = 0;
-		 token = strtok(word, s);
-		while( token != NULL ) 
+		for(returnThis = 0; returnThis < 1000000; returnThis++)
 		{
-			array[i] = token;
-			i++;
-			token = strtok(NULL, s);
+			if(strcmp(word,numToWords(returnThis)) == 0)
+			break;
 		}
-		int j;
-		int c;
-		int a;
-		int b;
-		int flag1;
-		int flag2;
-		for(j = 0;j < i;j++)
-		{
-			c = scanNum(array[j]);
-			if(c)
-			{
-				a = toNum(array[j]);
-				if (j == (i - 1 ) && flag2 == 0)
-					number += a;
-				if(flag2)
-					number += a;
-				flag2 = 1;
-				flag1 = 0;
-				if(j == 0)
-					number = a;
-					
-				
-			}
-			else
-			{
-				b = toPlace(array[j]);
-				if(flag1)
-					number = a * b;
-				number = number * b;
-				flag1 = 1;
-				flag2 = 0;
-				
-				
-			}
 			
-			
-			
-			
-			
-		}
-		
 	}
-	printf("%d",number);
+	if(returnThis == 1000000)
+		returnThis = 0;
+	return returnThis;
 	
 }
 void trim(char* word)
 {
 	word[strlen(word) - 1] = '\0';
 }
-int scanNum(char* word)
-{
-	char **num = (char**) malloc((28)*sizeof(char*));
-	int i;
-	num[0] = "zero";
-	num[1] = "one";
-	num[2] = "two";
-	num[3] = "three";
-	num[4] = "four";
-	num[5] = "five";
-	num[6] = "six";
-	num[7] = "seven";
-	num[8] = "eight";
-	num[9] = "nine";
-	num[10] = "ten";
-	num[11] = "eleven";
-	num[12] = "twelve";
-	num[13] = "thirteen";
-	num[14] = "fourteen";
-	num[15] = "fifteen";
-	num[16] = "sixteen";
-	num[17] = "seventeen";
-	num[18] = "eighteen";
-	num[19] = "nineteen";
-	num[20] = "twenty";
-	num[21] = "thirty";
-	num[22] = "forty";
-	num[23] = "fifty";
-	num[24] = "sixty";
-	num[25] = "seventy";
-	num[26] = "eighty";
-	num[27] = "ninety";
-	
-	for(i = 0; i < 28; i++)
-	{
-		if(strcmp(num[i],word) == 0)
-			return 1;
-	}
-		return 0;
-}
 
-int toNum(char* word){
-	if(strcmp(word,"zero") == 0)
-		return 0;
-	if(strcmp(word,"one") == 0)
-		return 1;
-	if(strcmp(word,"two") == 0)
-		return 2;
-	if(strcmp(word,"three") == 0)
-		return 3;
-	if(strcmp(word,"four") == 0)
-		return 4;
-	if(strcmp(word,"five") == 0)
-		return 5;
-	if(strcmp(word,"six") == 0)
-		return 6;
-	if(strcmp(word,"seven") == 0)
-		return 7;
-	if(strcmp(word,"eight") == 0)
-		return 8;
-	if(strcmp(word,"nine") == 0)
-		return 9;
-	if(strcmp(word,"ten") == 0)
-		return 10;
-	if(strcmp(word,"eleven") == 0)
-		return 11;
-	if(strcmp(word,"twelve") == 0)
-		return 12;
-	if(strcmp(word,"thirteen") == 0)
-		return 13;
-	if(strcmp(word,"fourteen") == 0)
-		return 14;
-	if(strcmp(word,"fifteen") == 0)
-		return 15;
-	if(strcmp(word,"sixteen") == 0)
-		return 16;
-	if(strcmp(word,"seventeen") == 0)
-		return 17;
-	if(strcmp(word,"eighteen") == 0)
-		return 18;
-	if(strcmp(word,"nineteen") == 0)
-		return 19;
-	if(strcmp(word,"twenty") == 0)
-		return 20;
-	if(strcmp(word,"thirty") == 0)
-		return 30;
-	if(strcmp(word,"forty") == 0)
-		return 40;
-	if(strcmp(word,"fifty") == 0)
-		return 50;
-	if(strcmp(word,"sixty") == 0)
-		return 60;
-	if(strcmp(word,"seventy") == 0)
-		return 70;
-	if(strcmp(word,"eighty") == 0)
-		return 80;
-	if(strcmp(word,"ninety") == 0)
-		return 90;
+char* wordsToCurrency(char* word, char* currency){
+	int num;
+	num = wordsToNum(word);
+	char *output = malloc(sizeof(char) * 256);
+	sprintf(output,"%d",num);
 	
-}
-int toPlace(char* word){
-	if(strcmp(word,"thousand") == 0)
-		return 1000;
-	else if(strcmp(word,"hundred") == 0)
-		return 100;
+	if(strcmp(currency,"JPY") == 0 || strcmp(currency,"PHP") == 0 || strcmp(currency,"USD") == 0)
+		return strcat(currency,output);
 	else
-		return 1;
-}
-void wordsToCurrency(){
+		return "Invalid Currency!";
 	
 }
 char* numberDelimited(char* number,char character,int jumps){
