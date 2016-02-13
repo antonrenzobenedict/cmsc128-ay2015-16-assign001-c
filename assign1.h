@@ -1,9 +1,7 @@
 
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
+#include<stdio.h> //standard input output library
+#include<stdlib.h> //standard library
+#include<string.h> //string library
 
 int menu();
 char * getOnes(int num);
@@ -12,9 +10,6 @@ char * getHundreds(int hundreds);
 char * specialOne(int num);
 char * numToWords(int num);
 int wordsToNum(char* word);
-int scanNum(char* word);
-int toNum(char* word);
-int toPlace(char* word);
 void trim(char* word);
 
 int menu(){
@@ -39,61 +34,65 @@ char* numToWords(int num)
 	char *word = malloc(sizeof(char) * 256);
 	
 	
-	strcpy(word,"");
+	strcpy(word,"");//initalizes word to blank
 	
 	
 	if(num == 1000000)
 	{
-		strcat(word,"one million");
+		strcat(word,"one million ");// if one million
 	}
 	else if(num == 0)
 	{
-		strcat(word,"zero");
+		strcat(word,"zero ");// if zero
 	}
-	else
+	else if(num < 1000000)
 	{
-		ones = num % 10;
-		tens = num % 100 / 10;
-		hundreds = num % 1000 / 100;
-		thousands = num % 10000 / 1000;
-		ten_thousands = num % 100000 / 10000;
-		hundred_thousands = num % 1000000 / 100000;
+		ones = num % 10;//gets the ones digit
+		tens = num % 100 / 10;// gets the tens digit
+		hundreds = num % 1000 / 100;// gets the hundreds digit
+		thousands = num % 10000 / 1000;// gets the thousands digit
+		ten_thousands = num % 100000 / 10000;// gets the ten thousands digit
+		hundred_thousands = num % 1000000 / 100000;//gets the hundred_thousands digit
 		
 		
-		if(hundred_thousands > 0)
+		if(hundred_thousands > 0)//concatenates "X hundred"
 			{
 				strcat(word,getOnes(hundred_thousands));
 				strcat(word,"hundred ");
 			}
 		if(ten_thousands > 0)
-				strcat(word,getTens(ten_thousands));
+				strcat(word,getTens(ten_thousands));//converts ten_thousands to words
 		if(ten_thousands == 1)
-				strcat(word,specialOne(thousands));
+				strcat(word,specialOne(thousands));//if special tens like eleven
 		if(ten_thousands != 1)
-				strcat(word,getOnes(thousands));
+				strcat(word,getOnes(thousands));//gets ones thousands
 				
-		if(thousands > 0 || ten_thousands > 0 || hundred_thousands > 0)
+		if(thousands > 0 || ten_thousands > 0 || hundred_thousands > 0)//if there is a thousand value
 			strcat(word,"thousand ");
 		
 		
-		if(hundreds > 0)
+		if(hundreds > 0)//concatenates "X hundred"
 			{
 				strcat(word,getOnes(hundreds));
 				strcat(word,"hundred ");
 			}
-		if(tens > 0)
+		if(tens > 0)//for not so special tens
 				strcat(word,getTens(tens));
-		if(tens == 1)
+		if(tens == 1)//for special tens
 				strcat(word,specialOne(ones));
-		if(tens != 1)
+		if(tens != 1)//for ones values
 				strcat(word,getOnes(ones));
+	}
+	else//if not in range
+	{
+		strcat(word,"Overflow");
 	}	
 		
 	
 	return word;
 }
 
-char * getOnes(int num){
+char * getOnes(int num){//function for getting the ones value
 	
 	char *n = malloc(sizeof(char) * 20);
 	
@@ -123,7 +122,7 @@ char * getOnes(int num){
 	
 }
 
-char * getTens(int tens)
+char * getTens(int tens)//function for getting the not so special tens values
 {
 	char *n = malloc(sizeof(char) * 20);
 	switch(tens)
@@ -156,7 +155,7 @@ char * getTens(int tens)
 	return n;
 }
 
-char * getHundreds(int hundreds){
+char * getHundreds(int hundreds){//function for getting the hundreds value
 	
 	char *n = malloc(sizeof(char) * 20);
 	
@@ -185,7 +184,7 @@ char * getHundreds(int hundreds){
 	return n;
 	
 }
-char * specialOne(int num)
+char * specialOne(int num)//function for getting the specials tens
 {
 	
 	char *n = malloc(sizeof(char) * 20);
@@ -217,61 +216,46 @@ char * specialOne(int num)
 	return n;
 }
 
-int wordsToNum(char* word)
+int wordsToNum(char* word)//converts words to numbers using brute force
 {
 	int returnThis = 0 ;
 	int number;
 	strcat(word," ");
-	if(strcmp(word,"one million") == 0)
-	{
-		number = 0;
-	}
-	else if(strcmp(word,"zero") == 0)
-	{
-		number = 0;
-	}
-	else
-	{
-		for(returnThis = 0; returnThis < 1000000; returnThis++)
+for(returnThis = 0; returnThis < 1000000; returnThis++)//tries every number from 0 to 1,000,000
 		{
-			if(strcmp(word,numToWords(returnThis)) == 0)
+			if(strcmp(word,numToWords(returnThis)) == 0)//breaks if it matches
 			break;
 		}
 			
-	}
-	if(returnThis == 1000000)
-		returnThis = 0;
-	return returnThis;
+	
+	
+	return returnThis;//returns the resulting number
 	
 }
 void trim(char* word)
 {
-	word[strlen(word) - 1] = '\0';
+	word[strlen(word) - 1] = '\0';//trims the word for excess whitespaces
 }
 
-char* wordsToCurrency(char* word, char* currency){
+char* wordsToCurrency(char* word, char* currency){//converts words and currency to numbers
 	int num;
 	num = wordsToNum(word);
 	char *output = malloc(sizeof(char) * 256);
 	sprintf(output,"%d",num);
 	
-	if(strcmp(currency,"JPY") == 0 || strcmp(currency,"PHP") == 0 || strcmp(currency,"USD") == 0)
+	if(strcmp(currency,"JPY") == 0 || strcmp(currency,"PHP") == 0 || strcmp(currency,"USD") == 0)//only selected currencies: USD,PHP,JPY
 		return strcat(currency,output);
 	else
-		return "Invalid Currency!";
+		return "Invalid Currency!";//else invalid
 	
 }
-char* numberDelimited(char* number,char character,int jumps){
+char* numberDelimited(char* number,char character,int jumps){//delimits number according to characters by jumps
 	char *output = malloc(sizeof(char) * 256);
-	
-	
 	int i;
-	
-	
 	i = strlen(number) - 1;
 	int j = 0;
 	char r;
-	while(i > j)
+	while(i > j)//reverses the numbers
     {
         r = number[i];
         number[i]= number[j];
@@ -285,7 +269,7 @@ char* numberDelimited(char* number,char character,int jumps){
 	int jumpC = 1;
 	j = strlen(number) + strlen(number) / jumps;
 	
-	for(i = 0; i < j; i++)
+	for(i = 0; i < j; i++)//delimits the numbers by the character in jumps intervals
 	{
 		output[i] = number[c];
 		c++;
@@ -305,7 +289,7 @@ char* numberDelimited(char* number,char character,int jumps){
 	i = strlen(output) - 1;
 	 j = 0;
 
-	while(i > j)
+	while(i > j)//reverses again the numbers
     {
         r = output[i];
         output[i]= output[j];
@@ -314,10 +298,5 @@ char* numberDelimited(char* number,char character,int jumps){
         j++;
     }
 	
-	return output;
+	return output;//returnts the numbers
 }
-
-
-//1234,56 
-//i 5 4 3
-//k 1 2 
